@@ -29,4 +29,17 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+router.post("/", async (req, res) => {
+  const newProject = await Projects.insert(req.body);
+  try {
+    if (!newProject.name || !newProject.description) {
+      res.status(404).json({ errorMessage: "missing field required" });
+    } else {
+      res.status(201).json(newProject);
+    }
+  } catch (error) {
+    res.status(500).json({ errorMessage: "Unable to post project" });
+  }
+});
+
 module.exports = router;
