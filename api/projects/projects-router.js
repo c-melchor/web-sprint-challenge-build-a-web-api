@@ -30,10 +30,10 @@ router.get("/:id", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  const newProject = await Projects.insert(req.body);
   try {
+    const newProject = await Projects.insert(req.body);
     if (!newProject.name || !newProject.description) {
-      res.status(404).json({ errorMessage: "missing field required" });
+      res.status(404).json({ errorMessage: "Missing a required field" });
     } else {
       res.status(201).json(newProject);
     }
