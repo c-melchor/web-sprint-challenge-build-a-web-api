@@ -36,7 +36,7 @@ router.get("/:id/actions", validateProjectId, async (req, res) => {
     console.log(projActions, "PROJACTIONS");
     res.status(200).json(projActions);
   } catch (error) {
-    res.status(404).json({ errorMessage: `Project with id ${id} not found.` });
+    res.status(404).json({ errorMessage: `Actions with id ${id} not found.` });
     console.log(error);
   }
 });
@@ -50,7 +50,7 @@ router.post("/", validateAction, validateProjectId, async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", validateActionId, async (req, res) => {
   try {
     const id = req.params.id;
     const deletedAction = await Actions.remove(id);
