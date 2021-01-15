@@ -24,19 +24,33 @@ async function validateAction(req, res, next) {
       req.action = action;
       next();
     } else if (!action.notes) {
-      res.status(404).json({ errorMessage: "Please provide notes" });
+      res.status(400).json({ errorMessage: "Please provide notes" });
     } else if (!action.description) {
-      res.status(404).json({ errorMessage: "Please provide a description" });
+      res.status(400).json({ errorMessage: "Please provide a description" });
     }
   } catch (error) {
     res.status(500).json({ errorMessage: "Unable to post action" });
   }
 }
 
+async function validateProject(res, req, next) {
+  try {
+    const edit = await req.req.body;
+    if (edit.name && edit.description) {
+      next();
+    } else if (!edit.name || !edit.description) {
+      res.status(400).json({ errorMessage: "Required field missing" });
+    }
+  } catch (error) {
+    res.status(500).json({ errorMessage: "Unable to find project" });
+  }
+}
+
 async function validateProjectId(res, req, next) {
   const projId = await req.req.params.id;
   const validProjId = await Projects.get(projId);
-  console.log(validProjId);
+  req.req.project = validProjId;
+  console.log(req.req.project, "REQPROJECT");
   try {
     if (!validProjId) {
       res.res
@@ -56,5 +70,6 @@ module.exports = {
   logger,
   validateActionId,
   validateAction,
-  validateProjectId
+  validateProjectId,
+  validateProject
 };

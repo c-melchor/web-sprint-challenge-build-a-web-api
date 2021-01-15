@@ -1,5 +1,6 @@
 const express = require("express");
 const Actions = require("./actions-model");
+const Projects = require("../projects/projects-model");
 const router = express.Router();
 const {
   validateActionId,
@@ -17,14 +18,24 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/:id", validateActionId, async (req, res) => {
-  const { id } = req.params;
+  const id = req.params.id;
   try {
-    const getActions = await Actions.get(id);
-    res.status(200).json(getActions);
+    const validAction = await Actions.get(id);
+
+    res.status(200).json(validAction);
   } catch (error) {
-    res
-      .status(500)
-      .json({ errorMessage: `unable to retrieve action by id ${id}` });
+    res.status(500).json({ errorMessage: "not a valid id" });
+  }
+});
+
+router.get("/:id/actions", validateProjectId, async (req, res) => {
+  console.log("in GET PROJ actions", req);
+  try {
+    const id = req.params.id;
+    const projActions = await Projects.get(id);
+    console.log(projActions);
+  } catch (error) {
+    res.status(500).json({ errorMessage: "Unable to get project actions" });
   }
 });
 

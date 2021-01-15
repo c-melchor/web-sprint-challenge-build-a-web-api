@@ -2,7 +2,7 @@ const express = require("express");
 const Projects = require("../projects/projects-model");
 const router = express.Router();
 
-const { validateProjectId } = require("../middleware");
+const { validateProjectId, validateProject } = require("../middleware");
 
 router.get("/", async (req, res) => {
   try {
@@ -29,30 +29,40 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+router.get("/:id/actions", validateProjectId, async (req, res) => {
+  try {
+    const projActions = await req.project.actions;
+    res.status(200).json(projActions);
+  } catch (error) {
+    res.status(500).json({ errorMessage: "Unable to get project actions" });
+  }
+});
+
 router.post("/", async (req, res) => {
   try {
     const newProject = await Projects.insert(req.body);
-    if (!newProject.name || !newProject.description) {
-      res.status(404).json({ errorMessage: "Missing a required field" });
+    if (newProject.name === "" || newProject.description === "") {
+      res.status(400).json({ errorMessage: "Missing required field" });
     } else {
       res.status(201).json(newProject);
     }
   } catch (error) {
-    res.status(500).json({ errorMessage: "Unable to post project" });
+    console.log(error, "ERRR");
+    // res.status(500).json({ errorMessage: "Unable to post project" });
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", validateProjectId, async (req, res) => {
   try {
     const id = req.params.id;
     const deletedProject = await Projects.remove(id);
     res.status(200).json(deletedProject);
   } catch (error) {
-    res.status(500).json({ errorMessage: "Unable to delete project" });
+    res.status(404).json({ errorMessage: "Unable to delete project" });
   }
 });
 
-router.put("/:id", validateProjectId, async (req, res) => {
+router.put("/:id", validateProjectId, validateProject, async (req, res) => {
   try {
     const id = req.params.id;
     const editedProject = await Projects.update(id, req.body);
