@@ -30,9 +30,9 @@ router.get("/:id", async (req, res) => {
 });
 
 router.get("/:id/actions", validateProjectId, async (req, res) => {
-  console.log("in GET PROJ actions", res.project);
+  const id = req.params.id;
   try {
-    const projActions = await res.project.actions;
+    const projActions = await Projects.getProjectActions(id);
     res.status(200).json(projActions);
   } catch (error) {
     res.status(404).json({ errorMessage: `Actions not found.` });
