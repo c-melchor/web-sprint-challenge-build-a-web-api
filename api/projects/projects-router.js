@@ -29,15 +29,6 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// router.get("/:id/actions", validateProjectId, async (req, res) => {
-//   const actionsFromProj = await req.res.project.actions;
-//   try {
-//     res.status(200).json(actionsFromProj);
-//   } catch (error) {
-//     console.log(error);
-//   }
-// });
-
 router.get("/:id/actions", validateProjectId, async (req, res) => {
   console.log("in GET PROJ actions", res.project);
   try {

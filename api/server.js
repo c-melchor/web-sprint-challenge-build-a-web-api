@@ -4,9 +4,6 @@ const { logger } = require("./middleware");
 const actionsRouter = require("./actions/actions-router");
 const projectsRouter = require("./projects/projects-router");
 
-// Complete your server here!
-// Do NOT `server.listen()` inside this file!
-
 server.use(express.json());
 server.use(logger);
 server.use("/api/actions", actionsRouter);
