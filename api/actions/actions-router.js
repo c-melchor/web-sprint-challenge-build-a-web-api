@@ -37,4 +37,16 @@ router.post("/", validateAction, validateProjectId, async (req, res) => {
   }
 });
 
+router.delete("/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const deletedAction = await Actions.remove(id);
+    if (deletedAction) {
+      res.status(200).json(deletedAction);
+    }
+  } catch (error) {
+    res.status(500).json({ errorMessage: "Unable to delete action" });
+  }
+});
+
 module.exports = router;
