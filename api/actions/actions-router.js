@@ -49,4 +49,14 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+router.put("/:id", validateAction, async (req, res) => {
+  try {
+    const id = req.params.id;
+    const editedAction = await Actions.update(id, req.body);
+    res.status(200).json(editedAction);
+  } catch (error) {
+    res.status(500).json({ errorMessage: "Unable to remove action" });
+  }
+});
+
 module.exports = router;
