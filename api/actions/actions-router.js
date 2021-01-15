@@ -49,7 +49,7 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-router.put("/:id", validateAction, async (req, res) => {
+router.put("/:id", validateAction, validateActionId, async (req, res) => {
   try {
     const id = req.params.id;
     const editedAction = await Actions.update(id, req.body);
