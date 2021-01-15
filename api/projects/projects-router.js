@@ -32,12 +32,10 @@ router.get("/:id", async (req, res) => {
 router.get("/:id/actions", validateProjectId, async (req, res) => {
   console.log("in GET PROJ actions", res.project);
   try {
-    const projHere = await res.project;
-    const projActions = projHere.actions;
+    const projActions = await res.project.actions;
     res.status(200).json(projActions);
   } catch (error) {
-    res.status(404).json({ errorMessage: `Actionsnot found.` });
-    console.log(error);
+    res.status(404).json({ errorMessage: `Actions not found.` });
   }
 });
 

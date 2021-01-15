@@ -55,7 +55,7 @@ async function validateProjectId(res, req, next) {
       res.res
         .status(404)
         .json({ errorMessage: `Project with id ${projId} does not exist` });
-    } else if (validProjId) {
+    } else {
       req.project = validProjId;
       next();
     }
