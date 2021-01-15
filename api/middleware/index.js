@@ -24,30 +24,44 @@ async function validateAction(req, res, next) {
       req.action = action;
       next();
     } else if (!action.notes) {
-      res.status(404).json({ errorMessage: "Please provide notes" });
+      res.status(400).json({ errorMessage: "Please provide notes" });
     } else if (!action.description) {
-      res.status(404).json({ errorMessage: "Please provide a description" });
+      res.status(400).json({ errorMessage: "Please provide a description" });
     }
   } catch (error) {
     res.status(500).json({ errorMessage: "Unable to post action" });
   }
 }
 
+async function validateProject(res, req, next) {
+  try {
+    const edit = await req.req.body;
+    if (!edit.name || !edit.description) {
+      res.status(400).json({ errorMessage: "Required field missing" });
+    } else {
+      next();
+    }
+  } catch (error) {
+    res.res.status(400).json({ errorMessage: "Required field missing" });
+  }
+}
+
 async function validateProjectId(res, req, next) {
   const projId = await req.req.params.id;
-  const validProjId = await Projects.get(projId);
-  console.log(validProjId);
+  let validProjId = await Projects.get(projId);
+
   try {
     if (!validProjId) {
       res.res
         .status(404)
         .json({ errorMessage: `Project with id ${projId} does not exist` });
-    } else {
+    } else if (validProjId) {
+      req.project = validProjId;
       next();
     }
   } catch (error) {
     res
-      .status(404)
+      .status(400)
       .json({ errorMessage: `Project with id ${validProjId} does not exist` });
   }
 }
@@ -56,5 +70,6 @@ module.exports = {
   logger,
   validateActionId,
   validateAction,
-  validateProjectId
+  validateProjectId,
+  validateProject
 };
