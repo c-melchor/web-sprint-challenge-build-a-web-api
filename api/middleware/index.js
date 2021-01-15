@@ -20,7 +20,7 @@ async function validateActionId(req, res, next) {
 async function validateAction(req, res, next) {
   try {
     const action = await req.body;
-    if (action && action.notes && action.description) {
+    if (action && action.notes && action.description && action.project_id) {
       req.action = action;
       next();
     } else if (!action.notes) {

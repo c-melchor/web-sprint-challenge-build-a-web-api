@@ -31,7 +31,6 @@ router.get("/:id", validateActionId, async (req, res) => {
 router.post("/", validateAction, validateProjectId, async (req, res) => {
   try {
     const newAction = await Actions.insert(req.body);
-    console.log(newAction);
     res.status(201).json(newAction);
   } catch (error) {
     res.status(500).json({ errorMessage: "Unable to post new action" });
