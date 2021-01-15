@@ -1,7 +1,11 @@
 const express = require("express");
 const Actions = require("./actions-model");
 const router = express.Router();
-const { validateActionId } = require("../middleware");
+const {
+  validateActionId,
+  validateAction,
+  validateProjectId
+} = require("../middleware");
 
 router.get("/", (req, res) => {
   Actions.get()
@@ -24,6 +28,16 @@ router.get("/:id", validateActionId, (req, res) => {
         .status(500)
         .json({ errorMessage: `unable to retrieve action by id ${id}` });
     });
+});
+
+router.post("/", validateAction, validateProjectId, async (req, res) => {
+  try {
+    const newAction = await req.action;
+    Actions.insert(newAction, newAction.project_id);
+    res.status(200).json(newAction);
+  } catch (error) {
+    res.status(500).json({ errorMessage: "Unable to post action" });
+  }
 });
 
 module.exports = router;
