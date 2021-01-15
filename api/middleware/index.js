@@ -34,11 +34,14 @@ async function validateAction(req, res, next) {
 }
 
 async function validateProjectId(res, req, next) {
-  const projId = await req.req.body.project_id;
+  const projId = await req.req.params.id;
   const validProjId = await Projects.get(projId);
+  console.log(validProjId);
   try {
     if (!validProjId) {
-      res.res.status(404).json({ errorMessage: `Project does not exist` });
+      res.res
+        .status(404)
+        .json({ errorMessage: `Project with id ${projId} does not exist` });
     } else {
       next();
     }

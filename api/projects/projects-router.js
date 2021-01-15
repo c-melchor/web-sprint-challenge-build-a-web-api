@@ -52,7 +52,7 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", validateProjectId, async (req, res) => {
   try {
     const id = req.params.id;
     const editedProject = await Projects.update(id, req.body);
