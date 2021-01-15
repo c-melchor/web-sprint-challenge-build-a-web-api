@@ -36,32 +36,32 @@ async function validateAction(req, res, next) {
 async function validateProject(res, req, next) {
   try {
     const edit = await req.req.body;
-    if (edit.name && edit.description) {
-      next();
-    } else if (!edit.name || !edit.description) {
+    if (!edit.name || !edit.description) {
       res.status(400).json({ errorMessage: "Required field missing" });
+    } else {
+      next();
     }
   } catch (error) {
-    res.status(500).json({ errorMessage: "Unable to find project" });
+    res.res.status(400).json({ errorMessage: "Required field missing" });
   }
 }
 
 async function validateProjectId(res, req, next) {
   const projId = await req.req.params.id;
-  const validProjId = await Projects.get(projId);
-  req.req.project = validProjId;
-  console.log(req.req.project, "REQPROJECT");
+  let validProjId = await Projects.get(projId);
+
   try {
     if (!validProjId) {
       res.res
         .status(404)
         .json({ errorMessage: `Project with id ${projId} does not exist` });
-    } else {
+    } else if (validProjId) {
+      req.project = validProjId;
       next();
     }
   } catch (error) {
     res
-      .status(404)
+      .status(400)
       .json({ errorMessage: `Project with id ${validProjId} does not exist` });
   }
 }

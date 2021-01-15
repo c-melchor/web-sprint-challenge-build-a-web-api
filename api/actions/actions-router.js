@@ -29,13 +29,15 @@ router.get("/:id", validateActionId, async (req, res) => {
 });
 
 router.get("/:id/actions", validateProjectId, async (req, res) => {
-  console.log("in GET PROJ actions", req);
+  console.log("in GET PROJ actions", req.body);
   try {
     const id = req.params.id;
     const projActions = await Projects.get(id);
-    console.log(projActions);
+    console.log(projActions, "PROJACTIONS");
+    res.status(200).json(projActions);
   } catch (error) {
-    res.status(500).json({ errorMessage: "Unable to get project actions" });
+    res.status(404).json({ errorMessage: `Project with id ${id} not found.` });
+    console.log(error);
   }
 });
 
