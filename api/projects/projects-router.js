@@ -29,11 +29,23 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+// router.get("/:id/actions", validateProjectId, async (req, res) => {
+//   const actionsFromProj = await req.res.project.actions;
+//   try {
+//     res.status(200).json(actionsFromProj);
+//   } catch (error) {
+//     console.log(error);
+//   }
+// });
+
 router.get("/:id/actions", validateProjectId, async (req, res) => {
-  const actionsFromProj = await req.res.project.actions;
+  console.log("in GET PROJ actions", res.project);
   try {
-    res.status(200).json(actionsFromProj);
+    const projHere = await res.project;
+    const projActions = projHere.actions;
+    res.status(200).json(projActions);
   } catch (error) {
+    res.status(404).json({ errorMessage: `Actionsnot found.` });
     console.log(error);
   }
 });

@@ -28,19 +28,6 @@ router.get("/:id", validateActionId, async (req, res) => {
   }
 });
 
-router.get("/:id/actions", validateProjectId, async (req, res) => {
-  console.log("in GET PROJ actions", req.body);
-  try {
-    const id = req.params.id;
-    const projActions = await Projects.get(id);
-    console.log(projActions, "PROJACTIONS");
-    res.status(200).json(projActions);
-  } catch (error) {
-    res.status(404).json({ errorMessage: `Actions with id ${id} not found.` });
-    console.log(error);
-  }
-});
-
 router.post("/", validateAction, validateProjectId, async (req, res) => {
   try {
     const newAction = await Actions.insert(req.body);
@@ -65,7 +52,8 @@ router.delete("/:id", validateActionId, async (req, res) => {
 router.put("/:id", validateAction, validateActionId, async (req, res) => {
   try {
     const id = req.params.id;
-    const editedAction = await Actions.update(id, req.body);
+    const newAction = req.action;
+    const editedAction = await Actions.update(id, newAction);
     res.status(200).json(editedAction);
   } catch (error) {
     res.status(500).json({ errorMessage: "Unable to remove action" });

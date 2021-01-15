@@ -22,6 +22,7 @@ async function validateAction(req, res, next) {
     const action = await req.body;
     if (action && action.notes && action.description && action.project_id) {
       req.action = action;
+      console.log(req.action);
       next();
     } else if (!action.notes) {
       res.status(400).json({ errorMessage: "Please provide notes" });
@@ -49,7 +50,6 @@ async function validateProject(res, req, next) {
 async function validateProjectId(res, req, next) {
   const projId = await req.req.params.id;
   let validProjId = await Projects.get(projId);
-
   try {
     if (!validProjId) {
       res.res
