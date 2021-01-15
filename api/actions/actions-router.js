@@ -7,27 +7,25 @@ const {
   validateProjectId
 } = require("../middleware");
 
-router.get("/", (req, res) => {
-  Actions.get()
-    .then(actions => {
-      res.status(200).json(actions);
-    })
-    .catch(() => {
-      res.status(500).json({ errorMessage: "unable to retrieve actions" });
-    });
+router.get("/", async (req, res) => {
+  try {
+    const getActions = await Actions.get();
+    res.status(200).json(getActions);
+  } catch (error) {
+    res.status(500).json({ errorMessage: "unable to retrieve actions" });
+  }
 });
 
-router.get("/:id", validateActionId, (req, res) => {
+router.get("/:id", validateActionId, async (req, res) => {
   const { id } = req.params;
-  Actions.get(id)
-    .then(action => {
-      res.status(200).json(action);
-    })
-    .catch(() => {
-      res
-        .status(500)
-        .json({ errorMessage: `unable to retrieve action by id ${id}` });
-    });
+  try {
+    const getActions = await Actions.get(id);
+    res.status(200).json(getActions);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ errorMessage: `unable to retrieve action by id ${id}` });
+  }
 });
 
 router.post("/", validateAction, validateProjectId, async (req, res) => {
