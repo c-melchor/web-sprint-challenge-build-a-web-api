@@ -1,12 +1,12 @@
 const db = require("../../data/dbConfig.js");
-const mappers = require('../../data/helpers/mappers');
+const mappers = require("../../data/helpers/mappers");
 
 module.exports = {
   get,
   insert,
   update,
   remove,
-  getProjectActions,
+  getProjectActions
 };
 
 function get(id) {
@@ -17,17 +17,19 @@ function get(id) {
 
     const promises = [query, getProjectActions(id)]; // [ projects, actions ]
 
-    return Promise.all(promises).then(function(results) {
-      let [project, actions] = results;
+    return Promise.all(promises)
+      .then(function(results) {
+        let [project, actions] = results;
 
-      if (project) {
-        project.actions = actions;
+        if (project) {
+          project.actions = actions;
 
-        return mappers.projectToBody(project);
-      } else {
-        return null;
-      }
-    });
+          return mappers.projectToBody(project);
+        } else {
+          return null;
+        }
+      })
+      .catch(e => e);
   } else {
     return query.then(projects => {
       return projects.map(project => mappers.projectToBody(project));
